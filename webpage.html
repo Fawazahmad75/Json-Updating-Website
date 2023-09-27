@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Engage Creative:JSON File Loader &amp; Saver </title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: aquamarine;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .form-section {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    input[type="file"],
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      background-color: lavender;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .error-message {
+      color: #f00;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src=data:image/jpeg;base64,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 ></img>
+    <!-- hello!!-->
+  <div class="form-section">
+    <h3>Load JSON File</h3> 
+    <input type="file" id="file" />
+    <br>
+    <br>
+    <button onclick="Load()">Load</button>
+  
+  </div>
+  <br>  
+    
+  <h3>JSON File Contents:</h3>
+  
+  <p class="output" id="output1"></p>
+  <textarea type ="text" id="jsonData1" rows="20" placeholder="JSON File contents"disabled></textarea>
+  <div id="output"></div>
+  <h3>Update JSON</h3>
+ <!-- <label for="name">Name:</label>
+  <input type="text" id="name">
+  <br>
+  <label for="id">ID:</label>
+  <input type="number" id="id">
+  <br>  
+  <label for="age">Age:</label>
+  <input type="number" id="age">
+   <br> 
+  <br>
+  <button onclick="Update()">Update JSON</button>
+   <div class="form-section">
+      <br>
+      <button onclick="Save()">Save</button>
+    -->
+    <form id="inputForm">
+    <input type="text" id="name" placeholder="Enter Name">
+    <input type="number" id="id" placeholder="Enter ID">
+    <input type="number" id="age" placeholder="Enter Age">
+    <button type="submit" style="display: none;">Submit</button>  
+    </form>
+    <br>
+    <button onclick="Update()">Update</button>
+    <div class="form-section">
+    <br>
+    <button onclick="Save()">Save</button>
+    
+    </div>
+  </div>  
+  
+    <script>
+    const output1= document.getElementById('jsonData1');
+    const text1= document.getElementById('name');
+    const text2= document.getElementById('age');  
+    const text3= document.getElementById('id');    
+    function Update(){
+      output1.value+="ID: "+text3.value+"\n"+"Name: "+text1.value+"\n"+"Age: "+text2.value+"\n"+"\n";
+      text1.value="";
+      text2.value="";
+      text3.value="";
+    }
+    function Save(){
+      
+      output1.value="";
+      text1.value="";
+      text2.value="";
+      text3.value="";
+    }
+    function Load() {
+      fetch('./data.json')
+        .then(function (response) {
+            return response.json ();
+        })  
+        .then(function (data) {
+            var i=0;
+            for (i=0;i<data.length;i++) {
+                 document.getElementById('jsonData1').innerHTML+="ID: "+data[i].id+"\n"+"Name: "+data[i].firstName +"\n"+"Age: "+ data[i].Age +"\n\n";
+        }
+        })      
+
+        .catch(function (err) {
+            console.log (err);
+        });
+    }
+  </script>    
+  <script src="script.js"></script>
+
+   
+</body>
+</html>
+
